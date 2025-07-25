@@ -137,7 +137,7 @@ const QueensGame = forwardRef<QueensGameRef>((props, ref) => {
 
   if (!gameStarted) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center max-w-4xl mx-auto text-center px-6">
+      <div className="w-full flex flex-col items-center justify-start max-w-4xl mx-auto text-center px-6 py-8">
         <div className="mb-8">
           <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
             Welcome to Queens Puzzle! 👑
@@ -212,17 +212,19 @@ const QueensGame = forwardRef<QueensGameRef>((props, ref) => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col max-w-4xl mx-auto">
-      <GameControls
-        timeElapsed={timeElapsed}
-        difficulty={difficulty}
-        onNewGame={newGame}
-        onReset={resetGame}
-        onDifficultyChange={changeDifficulty}
-        isGameWon={isGameWon}
-      />
+    <div className="w-full flex flex-col max-w-4xl mx-auto px-4 py-6">
+      <div className="flex-shrink-0 mb-4">
+        <GameControls
+          timeElapsed={timeElapsed}
+          difficulty={difficulty}
+          onNewGame={newGame}
+          onReset={resetGame}
+          onDifficultyChange={changeDifficulty}
+          isGameWon={isGameWon}
+        />
+      </div>
       
-      <div className="flex-1 flex items-center justify-center mt-4">
+      <div className="flex justify-center mb-4">
         <GameBoard
           gameState={gameState}
           selectedCell={selectedCell}

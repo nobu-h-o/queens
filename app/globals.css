@@ -24,3 +24,43 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Enable smooth scrolling and proper mobile viewport handling */
+html {
+  scroll-behavior: smooth;
+  /* Prevent zoom on mobile devices */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* Ensure proper mobile scrolling */
+body, #__next, main {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  body {
+    /* Enable momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent pull-to-refresh interference */
+    overscroll-behavior-y: contain;
+  }
+  
+  /* Ensure main page container scrolls */
+  .main-container {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  /* Use dynamic viewport height where supported */
+  @supports (height: 100dvh) {
+    body, #__next, main {
+      min-height: 100dvh;
+    }
+  }
+}

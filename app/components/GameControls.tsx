@@ -33,19 +33,19 @@ const GameControls = ({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 flex-shrink-0">
-      <div className="flex items-center justify-between gap-4">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 sm:p-4 flex-shrink-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         {/* Stats */}
         <div className="flex items-center gap-4">
           <div className="text-center">
-            <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
               {formatTime(timeElapsed)}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-300">Time</div>
           </div>
 
           <div className="text-center">
-            <div className="text-lg font-semibold text-purple-600 dark:text-purple-400">
+            <div className="text-md sm:text-lg font-semibold text-purple-600 dark:text-purple-400">
               {getDifficultyLabel(difficulty)}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-300">Size</div>
@@ -53,22 +53,22 @@ const GameControls = ({
         </div>
 
         {/* Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Difficulty Selector */}
           <select
             value={difficulty}
             onChange={(e) => onDifficultyChange(e.target.value as 'easy' | 'medium' | 'hard')}
-            className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-2 py-1 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="easy">Easy (7×7)</option>
-            <option value="medium">Medium (8×8)</option>
-            <option value="hard">Hard (9×9)</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
           </select>
 
           {/* Action Buttons */}
           <button
             onClick={onReset}
-            className="px-3 py-1 text-sm bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-md transition-colors duration-200"
+            className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-md transition-colors duration-200"
             title="Reset current puzzle"
           >
             Reset
@@ -76,10 +76,10 @@ const GameControls = ({
 
           <button
             onClick={onNewGame}
-            className="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md transition-colors duration-200"
+            className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md transition-colors duration-200"
             title="Generate new puzzle"
           >
-            New Game
+            New
           </button>
         </div>
       </div>

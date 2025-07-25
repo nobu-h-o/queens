@@ -35,9 +35,9 @@ const GameBoard = ({
     
     switch (cell.state) {
       case 'queen':
-        return <span className="text-2xl">👑</span>;
+        return <span className="text-2xl sm:text-3xl">👑</span>;
       case 'blocked':
-        return <span className="text-xl font-bold text-gray-600 dark:text-gray-300">×</span>;
+        return <span className="text-xl sm:text-2xl font-bold text-gray-600 dark:text-gray-300">×</span>;
       default:
         return null;
     }
@@ -45,7 +45,7 @@ const GameBoard = ({
 
   const getCellClasses = (row: number, col: number) => {
     const cell = board[row][col];
-    const baseClasses = 'w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-md rounded-sm';
+    const baseClasses = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-md rounded-sm touch-manipulation border border-gray-400/20';
     
     // Region color
     const regionColor = REGION_COLORS[cell.region % REGION_COLORS.length];
@@ -142,12 +142,13 @@ const GameBoard = ({
   };
 
   return (
-    <div className="inline-block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+    <div className="inline-block bg-white dark:bg-gray-800 p-2 sm:p-4 rounded-lg shadow-lg max-w-full">
       <div 
-        className="grid gap-1 p-2 bg-gray-800 dark:bg-gray-800 rounded-lg"
+        className="grid gap-0.5 p-2 bg-gray-800 dark:bg-gray-800 rounded-lg touch-manipulation"
         style={{ 
           gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
-          gridTemplateRows: `repeat(${size}, minmax(0, 1fr))`
+          gridTemplateRows: `repeat(${size}, minmax(0, 1fr))`,
+          maxWidth: '95vw'
         }}
       >
         {Array.from({ length: size }, (_, row) =>
