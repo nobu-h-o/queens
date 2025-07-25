@@ -128,15 +128,12 @@ function generateSolution(size: number, regionMap: number[][]): Position[] | nul
     const region = regionMap[row][col];
     if (usedRegions.has(region)) return false;
     
-    // Check diagonal and adjacent constraints
+    // Check adjacent constraints (queens cannot touch)
     for (const queenPos of solution) {
       const rowDiff = Math.abs(row - queenPos.row);
       const colDiff = Math.abs(col - queenPos.col);
       
-      // Check diagonal attack
-      if (rowDiff === colDiff) return false;
-      
-      // Check adjacent cells (queens cannot touch)
+      // Check adjacent cells (queens cannot touch) - includes adjacent diagonals
       if (rowDiff <= 1 && colDiff <= 1) return false;
     }
     
@@ -199,20 +196,7 @@ export function generatePuzzle(size: number): GameState {
           }))
         );
         
-        // Place 1-2 queens as hints
-        const numHints = Math.min(2, Math.floor(size / 4));
-        const hintIndices = [];
-        for (let i = 0; i < numHints; i++) {
-          let hintIndex;
-          do {
-            hintIndex = Math.floor(Math.random() * solution.length);
-          } while (hintIndices.includes(hintIndex));
-          hintIndices.push(hintIndex);
-          
-          const hintPos = solution[hintIndex];
-          board[hintPos.row][hintPos.col].state = 'queen';
-          board[hintPos.row][hintPos.col].isHint = true;
-        }
+        // No hint queens - players start with empty board
         
         return {
           board,
@@ -270,9 +254,7 @@ function createFallbackPuzzle(size: number): GameState {
     }))
   );
   
-  // Place one hint queen
-  board[0][0].state = 'queen';
-  board[0][0].isHint = true;
+  // No hint queens in fallback either
   
   return {
     board,
@@ -301,17 +283,8 @@ export function isValidQueenPlacement(
     if (r !== row && board[r][col].state === 'queen') return false;
   }
   
-  // Check diagonals
-  const directions = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
-  for (const [dr, dc] of directions) {
-    let r = row + dr;
-    let c = col + dc;
-    while (r >= 0 && r < size && c >= 0 && c < size) {
-      if (board[r][c].state === 'queen') return false;
-      r += dr;
-      c += dc;
-    }
-  }
+  // Only check adjacent diagonal cells (touching), not full diagonal lines
+  // This is handled by the adjacent cells check below
   
   // Check adjacent cells
   for (let dr = -1; dr <= 1; dr++) {

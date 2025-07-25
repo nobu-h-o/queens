@@ -6,28 +6,26 @@ interface GameBoardProps {
   gameState: GameState;
   selectedCell: Position | null;
   onCellClick: (row: number, col: number) => void;
-  onCellDoubleClick: (row: number, col: number) => void;
   isGameWon: boolean;
 }
 
 const REGION_COLORS = [
-  'bg-red-200 dark:bg-red-800',
-  'bg-blue-200 dark:bg-blue-800',
-  'bg-green-200 dark:bg-green-800',
-  'bg-yellow-200 dark:bg-yellow-800',
-  'bg-purple-200 dark:bg-purple-800',
-  'bg-pink-200 dark:bg-pink-800',
-  'bg-indigo-200 dark:bg-indigo-800',
-  'bg-orange-200 dark:bg-orange-800',
-  'bg-teal-200 dark:bg-teal-800',
-  'bg-cyan-200 dark:bg-cyan-800',
+  'bg-red-300 dark:bg-red-700',          // Red
+  'bg-sky-300 dark:bg-sky-700',          // Sky Blue (distinct from other blues)
+  'bg-green-300 dark:bg-green-700',      // Green
+  'bg-yellow-300 dark:bg-yellow-700',    // Yellow
+  'bg-purple-300 dark:bg-purple-700',    // Purple
+  'bg-orange-300 dark:bg-orange-700',    // Orange
+  'bg-pink-300 dark:bg-pink-700',        // Pink
+  'bg-teal-300 dark:bg-teal-700',        // Teal
+  'bg-gray-300 dark:bg-gray-600',        // Gray
+  'bg-indigo-300 dark:bg-indigo-700',    // Indigo
 ];
 
 const GameBoard = ({ 
   gameState, 
   selectedCell, 
-  onCellClick, 
-  onCellDoubleClick,
+  onCellClick,
   isGameWon 
 }: GameBoardProps) => {
   const { board, size } = gameState;
@@ -47,19 +45,39 @@ const GameBoard = ({
 
   const getCellClasses = (row: number, col: number) => {
     const cell = board[row][col];
-    const baseClasses = 'w-12 h-12 border border-gray-300 dark:border-gray-600 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-md';
+    const baseClasses = 'w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-md rounded-sm';
     
     // Region color
     const regionColor = REGION_COLORS[cell.region % REGION_COLORS.length];
+    
+    // Region border logic - add thick borders at region boundaries
+    let borderClasses = '';
+    const currentRegion = cell.region;
+    
+    // Check top border
+    if (row === 0 || board[row - 1][col].region !== currentRegion) {
+      borderClasses += ' border-t-4 border-t-black';
+    }
+    
+    // Check bottom border
+    if (row === size - 1 || board[row + 1][col].region !== currentRegion) {
+      borderClasses += ' border-b-4 border-b-black';
+    }
+    
+    // Check left border
+    if (col === 0 || board[row][col - 1].region !== currentRegion) {
+      borderClasses += ' border-l-4 border-l-black';
+    }
+    
+    // Check right border
+    if (col === size - 1 || board[row][col + 1].region !== currentRegion) {
+      borderClasses += ' border-r-4 border-r-black';
+    }
     
     // Additional states
     let stateClasses = '';
     if (selectedCell && selectedCell.row === row && selectedCell.col === col) {
       stateClasses += ' ring-2 ring-blue-500';
-    }
-    
-    if (cell.isHint) {
-      stateClasses += ' ring-2 ring-green-500';
     }
 
     if (isGameWon) {
@@ -73,7 +91,7 @@ const GameBoard = ({
       }
     }
 
-    return `${baseClasses} ${regionColor} ${stateClasses}`;
+    return `${baseClasses} ${regionColor} ${borderClasses} ${stateClasses}`;
   };
 
   const hasConflict = (row: number, col: number): boolean => {
@@ -94,19 +112,8 @@ const GameBoard = ({
       }
     }
 
-    // Check diagonal conflicts
-    const directions = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
-    for (const [dr, dc] of directions) {
-      let r = row + dr;
-      let c = col + dc;
-      while (r >= 0 && r < size && c >= 0 && c < size) {
-        if (board[r][c].state === 'queen') {
-          return true;
-        }
-        r += dr;
-        c += dc;
-      }
-    }
+    // Only check adjacent diagonal cells (touching), not full diagonal lines
+    // This allows queens like (0,0) and (2,2) but prevents (0,0) and (1,1)
 
     // Check adjacent cells (queens cannot touch)
     for (let dr = -1; dr <= 1; dr++) {
@@ -137,7 +144,7 @@ const GameBoard = ({
   return (
     <div className="inline-block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
       <div 
-        className="grid gap-1"
+        className="grid gap-1 p-2 bg-gray-800 dark:bg-gray-800 rounded-lg"
         style={{ 
           gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${size}, minmax(0, 1fr))`
@@ -149,18 +156,13 @@ const GameBoard = ({
               key={`${row}-${col}`}
               className={getCellClasses(row, col)}
               onClick={() => onCellClick(row, col)}
-              onDoubleClick={() => onCellDoubleClick(row, col)}
               role="button"
               tabIndex={0}
               aria-label={`Cell ${row + 1}, ${col + 1}`}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  if (e.detail === 2 || e.key === 'Enter') {
-                    onCellDoubleClick(row, col);
-                  } else {
-                    onCellClick(row, col);
-                  }
+                  onCellClick(row, col);
                 }
               }}
             >
@@ -170,9 +172,8 @@ const GameBoard = ({
         )}
       </div>
       
-      <div className="mt-4 text-sm text-gray-600 dark:text-gray-300 text-center">
-        <p>Single click: Mark with ×</p>
-        <p>Double click: Place/remove queen 👑</p>
+      <div className="mt-2 text-xs text-gray-600 dark:text-gray-300 text-center">
+        <p>Click to cycle: Empty → × → 👑 → Empty</p>
       </div>
     </div>
   );
