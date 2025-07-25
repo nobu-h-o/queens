@@ -147,8 +147,8 @@ const QueensGame = forwardRef<QueensGameRef>((props, ref) => {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 items-start justify-center w-full max-w-4xl">
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 flex-1 max-w-lg">
+        <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-start justify-center w-full max-w-4xl">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 flex-1 max-w-lg w-full lg:w-auto">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
               How to Play:
             </h3>
@@ -162,9 +162,9 @@ const QueensGame = forwardRef<QueensGameRef>((props, ref) => {
             </ul>
           </div>
 
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 flex-1 max-w-lg flex flex-col items-center justify-center">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 flex-1 max-w-lg w-full lg:w-auto flex flex-col items-center justify-center">
             <div className="space-y-6 w-full">
-              <div>
+              <div className="text-center">
                 <label className="block text-xl font-semibold text-gray-800 dark:text-white mb-4">
                   Choose Difficulty:
                 </label>
@@ -224,28 +224,34 @@ const QueensGame = forwardRef<QueensGameRef>((props, ref) => {
         />
       </div>
       
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center mb-4 relative">
         <GameBoard
           gameState={gameState}
           selectedCell={selectedCell}
           onCellClick={handleCellClick}
           isGameWon={isGameWon}
         />
-      </div>
-
-      {isGameWon && (
-        <div className="mt-4 text-center flex-shrink-0">
-          <div className="bg-green-100 dark:bg-green-900 border border-green-300 dark:border-green-700 rounded-lg p-4 max-w-md mx-auto">
-            <h2 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">
-              🎉 Congratulations!
-            </h2>
-            <p className="text-sm text-green-700 dark:text-green-300">
-              You solved the puzzle in {Math.floor(timeElapsed / 60)}:
-              {(timeElapsed % 60).toString().padStart(2, '0')}!
-            </p>
+        
+        {isGameWon && (
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="bg-green-100 dark:bg-green-900 border border-green-300 dark:border-green-700 rounded-lg p-6 max-w-md mx-auto shadow-2xl backdrop-blur-sm text-center">
+              <h2 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">
+                🎉 Congratulations!
+              </h2>
+              <p className="text-sm text-green-700 dark:text-green-300 mb-4">
+                You solved the puzzle in {Math.floor(timeElapsed / 60)}:
+                {(timeElapsed % 60).toString().padStart(2, '0')}!
+              </p>
+              <button
+                onClick={newGame}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md transition-colors duration-200"
+              >
+                New Game
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 });
