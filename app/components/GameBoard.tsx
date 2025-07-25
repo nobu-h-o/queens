@@ -45,7 +45,7 @@ const GameBoard = ({
 
   const getCellClasses = (row: number, col: number) => {
     const cell = board[row][col];
-    const baseClasses = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-md rounded-sm touch-manipulation border border-gray-400/20';
+    const baseClasses = 'aspect-square flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-md rounded-sm touch-manipulation';
     
     // Region color
     const regionColor = REGION_COLORS[cell.region % REGION_COLORS.length];
@@ -142,15 +142,17 @@ const GameBoard = ({
   };
 
   return (
-    <div className="inline-block bg-white dark:bg-gray-800 p-2 sm:p-4 rounded-lg shadow-lg max-w-full">
-      <div 
-        className="grid gap-0.5 p-2 bg-gray-800 dark:bg-gray-800 rounded-lg touch-manipulation"
-        style={{ 
-          gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
-          gridTemplateRows: `repeat(${size}, minmax(0, 1fr))`,
-          maxWidth: '95vw'
-        }}
-      >
+    <div className="flex justify-center w-full">
+      <div className="bg-white dark:bg-gray-800 p-2 sm:p-4 rounded-lg shadow-lg">
+        <div 
+          className="grid gap-1 p-2 bg-gray-800 dark:bg-gray-800 rounded-lg touch-manipulation aspect-square mx-auto"
+          style={{ 
+            gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${size}, minmax(0, 1fr))`,
+            width: 'min(95vw, 60vh)',
+            height: 'min(95vw, 60vh)'
+          }}
+        >
         {Array.from({ length: size }, (_, row) =>
           Array.from({ length: size }, (_, col) => (
             <div
@@ -171,10 +173,11 @@ const GameBoard = ({
             </div>
           ))
         )}
-      </div>
-      
-      <div className="mt-2 text-xs text-gray-600 dark:text-gray-300 text-center">
-        <p>Click to cycle: Empty → × → 👑 → Empty</p>
+        </div>
+        
+        <div className="mt-2 text-xs text-gray-600 dark:text-gray-300 text-center">
+          <p>Click to cycle: Empty → × → 👑 → Empty</p>
+        </div>
       </div>
     </div>
   );
