@@ -1,17 +1,22 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import GameBoard from './GameBoard';
 import GameControls from './GameControls';
 import { generatePuzzle, CellState, GameState, Position } from '../utils/gameLogic';
 
-const QueensGame = () => {
+export interface QueensGameRef {
+  returnToStart: () => void;
+}
+
+const QueensGame = forwardRef<QueensGameRef>((props, ref) => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [selectedCell, setSelectedCell] = useState<Position | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
   const [isGameWon, setIsGameWon] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
 
   // Timer effect
   useEffect(() => {
@@ -34,12 +39,9 @@ const QueensGame = () => {
     setTimeElapsed(0);
     setIsGameWon(false);
     setDifficulty(diff);
+    setGameStarted(true);
   }, [difficulty]);
 
-  // Initialize game on mount
-  useEffect(() => {
-    initializeGame();
-  }, []);
 
   const handleCellClick = useCallback((row: number, col: number) => {
     if (!gameState || isGameWon) return;
@@ -121,6 +123,84 @@ const QueensGame = () => {
     initializeGame(newDifficulty);
   }, [initializeGame]);
 
+  const returnToStart = useCallback(() => {
+    setGameStarted(false);
+    setGameState(null);
+    setSelectedCell(null);
+    setTimeElapsed(0);
+    setIsGameWon(false);
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    returnToStart
+  }), [returnToStart]);
+
+  if (!gameStarted) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center max-w-4xl mx-auto text-center px-6">
+        <div className="mb-8">
+          <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            Welcome to Queens Puzzle! 👑
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+            Challenge your logic with this strategic puzzle game
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8 items-start justify-center w-full max-w-4xl">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 flex-1 max-w-lg">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+              How to Play:
+            </h3>
+            <ul className="text-left space-y-2 text-gray-700 dark:text-gray-300">
+              <li>• Place one queen (👑) in each row</li>
+              <li>• Place one queen in each column</li>
+              <li>• Place one queen in each colored region</li>
+              <li>• Queens cannot touch each other</li>
+              <li>• Single click to mark cells with ✗</li>
+              <li>• Double click or continue clicking to place queens</li>
+            </ul>
+          </div>
+
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 flex-1 max-w-lg flex flex-col items-center justify-center">
+            <div className="space-y-6 w-full">
+              <div>
+                <label className="block text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                  Choose Difficulty:
+                </label>
+                <div className="flex flex-col gap-3">
+                  {(['easy', 'medium', 'hard'] as const).map((diff) => (
+                    <button
+                      key={diff}
+                      onClick={() => setDifficulty(diff)}
+                      className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                        difficulty === diff
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      {diff.charAt(0).toUpperCase() + diff.slice(1)}
+                      <span className="text-sm ml-2">
+                        ({diff === 'easy' ? '7×7' : diff === 'medium' ? '8×8' : '9×9'})
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={() => initializeGame()}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
+              >
+                Start Game
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!gameState) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -166,6 +246,8 @@ const QueensGame = () => {
       )}
     </div>
   );
-};
+});
+
+QueensGame.displayName = 'QueensGame';
 
 export default QueensGame;
