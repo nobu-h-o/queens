@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Queens
+This is a LinkedIn Queens clone that is made 100% by Claude Code. Below is the prompt that created this project, also made by Claude.
 
-## Getting Started
+# LinkedIn Queens Game - Web App Implementation Prompt
 
-First, run the development server:
+Please create a complete web application that implements the LinkedIn Queens puzzle game. Here are the detailed requirements:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Game Overview
+Create a logic puzzle game where players place queens (👑) on a colored grid following specific rules. This should be a polished, responsive web application with smooth interactions and visual feedback.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Core Game Rules
+1. **One queen per row** - Each horizontal row must contain exactly one queen
+2. **One queen per column** - Each vertical column must contain exactly one queen  
+3. **One queen per colored region** - Each distinctly colored area must contain exactly one queen
+4. **No adjacent queens** - Queens cannot touch each other horizontally, vertically, or diagonally
+5. **Logical deduction** - Puzzles should be solvable through logic without guessing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## User Interface Requirements
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Game Board
+- Create a responsive grid (start with 7x7, support up to 10x10)
+- Generate distinct colored regions (minimum 5-7 different colors)
+- Clear visual distinction between different colored regions
+- Cells should be large enough for touch interaction (mobile-friendly)
+- Professional, modern styling with smooth animations
 
-## Learn More
+### Interaction System
+- **Single click**: Place/remove an X marker (indicating queen cannot be placed)
+- **Double click or dedicated button**: Place/remove a queen (👑)
+- **Drag support**: Allow dragging to mark multiple cells with X
+- **Visual feedback**: Hover effects and selection indicators
+- **Error indication**: Highlight conflicts when rules are violated
 
-To learn more about Next.js, take a look at the following resources:
+### Game Controls
+- **New Game button**: Generate a new puzzle
+- **Reset button**: Clear current puzzle back to starting state
+- **Hint system**: Show possible moves or highlight errors
+- **Difficulty selector**: Easy (7x7), Medium (8x8), Hard (9x9+)
+- **Timer**: Track solving time
+- **Move counter**: Track number of moves made
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technical Implementation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Puzzle Generation
+- Create algorithm to generate valid puzzles with unique solutions
+- Ensure puzzles are solvable through logical deduction
+- Pre-place some queens as starting hints (1-3 queens typically)
+- Generate colored regions that create interesting constraints
 
-## Deploy on Vercel
+### Validation System
+- Real-time constraint checking
+- Visual indicators for rule violations
+- Win condition detection
+- Prevent invalid moves when possible
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Responsive Design
+- Mobile-first responsive design
+- Touch-friendly interactions
+- Clean, modern UI inspired by LinkedIn's design
+- Dark/light theme support
+- Accessibility considerations (ARIA labels, keyboard navigation)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Advanced Features (if possible)
+- **Puzzle library**: Multiple pre-designed puzzles of varying difficulty
+- **Solution verification**: Check if current state can lead to valid solution
+- **Step-by-step hints**: Guide players through logical deduction
+- **Statistics tracking**: Solve times, accuracy, difficulty progress
+- **Animation effects**: Smooth transitions for piece placement
+- **Sound effects**: Optional audio feedback for actions
+
+## Code Structure
+- Use modern JavaScript (ES6+) with modular architecture
+- Implement clean separation between game logic and UI
+- Include comprehensive error handling
+- Write readable, well-commented code
+- Use CSS Grid or Flexbox for responsive layout
+- Consider using a small framework like React if beneficial
+
+## Visual Design Guidelines
+- Clean, professional aesthetic similar to LinkedIn's games
+- Intuitive color scheme for regions (avoid colors that are hard to distinguish)
+- Smooth animations and transitions
+- Clear visual hierarchy
+- Professional typography
+- Consistent spacing and alignment
+
+## Testing & Quality
+- Ensure puzzles are always solvable
+- Test across different screen sizes
+- Validate all game rules are properly enforced
+- Smooth performance on both desktop and mobile
+- Handle edge cases gracefully
+
+## Deliverables
+Please provide a complete, working web application that can be opened in a browser and played immediately. Include all HTML, CSS, and JavaScript in organized files with clear documentation of how the game works and how to extend it.
+
+The goal is to create a professional-quality implementation that captures the engaging puzzle mechanics of LinkedIn's Queens game while providing an excellent user experience.
